@@ -296,7 +296,15 @@
     <Compile Include="Assets\Furnitures\Ameye\Alex&apos;s Door System Lite\Scripts\Editor\TagHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Furnitures\Laptop\StandardColorMask.shader" />
+    <None Include="Assets\Objects\FoodAndGrocery\Info.txt" />
+    <None Include="Assets\Objects\Fruit Pack\Shaders\ToonLit.shader" />
+    <None Include="Assets\Objects\Fruit Pack\Shaders\ToonLitTransparent.shader" />
+    <None Include="Assets\Objects\kitchen props\Readme.txt" />
     <None Include="Assets\data.txt" />
+    <None Include="Assets\motion\Huge Mocap Library\READTHIS.txt" />
+    <None Include="Assets\motion\Huge Mocap Library\mocap animations\cmu-mocap-index-text.txt" />
+    <None Include="Assets\motion\Jeremy\Docs\MaleCharacterAnimation.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
