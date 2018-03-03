@@ -76,8 +76,12 @@ public class ImportFurnitures : MonoBehaviour {
         return pos;
     }
 
-    public double ConvertToRadians(double angle) {
-        return (System.Math.PI / 180) * angle;
+    public float ConvertToRadians(double angle) {
+        return (float)((System.Math.PI / 180) * angle);
+    }
+
+    public float ConvertToDegrees(double angle) {
+        return (float)((angle * 180)/System.Math.PI);
     }
 
     void spawnFloor() {
@@ -92,7 +96,7 @@ public class ImportFurnitures : MonoBehaviour {
         double length = Vector2.Distance(A,B);
         double angle =  System.Math.Atan2(B[1] - A[1],B[0] - A[0]);
         wall.transform.localScale = new Vector3((float)length, (float)height, 0.01F);
-        wall.transform.Rotate(0,(float)ConvertToRadians(angle),0);
+        wall.transform.Rotate(0,ConvertToDegrees(angle),0);
         wall.transform.position = new Vector3((float)A.x,0,(float)A.y);
     }
 
@@ -141,29 +145,27 @@ public class ImportFurnitures : MonoBehaviour {
         Debug.Log(assetList.Length);
 
         for (int i = 0; i < assetList.Length; i++) {
-            Debug.Log(assetList[i].position[0] + assetList[i].position[1] + assetList[i].position[2]);
-            Debug.Log(assetList[i].id);
+            Debug.Log((float)assetList[i].orientation[0]);
         }
 
         for (int i = 0; i < assetList.Length; i++) {
-            GameObject obj;
+            GameObject obj;// = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             switch (assetList[i].id) {
                 //chair
                 case 0:
                     obj = GameObject.Instantiate((GameObject)Resources.Load("Chair_1"));
-                    obj.transform.position = listToVec3(assetList[i].position);
-                    obj.transform.Rotate(0,(float)assetList[i].orientation[0],0);
                     break;
                 //table
                 case 1:
                     obj = GameObject.Instantiate((GameObject)Resources.Load("CoffeTable_1"));
-                    obj.transform.position = listToVec3(assetList[i].position);
-                    obj.transform.Rotate(0,(float)assetList[i].orientation[0],0);
                     break;
                 default:
+                    obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Debug.Log("object not found");
                     break;
             }
+            obj.transform.position = listToVec3(assetList[i].position);
+            obj.transform.Rotate(0,0,ConvertToDegrees(assetList[i].orientation[0]));
         }
 
         for (int i = 0; i < wallList.Length; i++) {
