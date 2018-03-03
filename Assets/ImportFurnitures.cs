@@ -36,6 +36,7 @@ public class ImportFurnitures : MonoBehaviour {
     public static class JsonHelper {
         public static T[] FromJson<T>(string json)
         {
+            json = "{\"Items\":" + json + "}";
             Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
             return wrapper.Items;
         }
@@ -84,6 +85,24 @@ public class ImportFurnitures : MonoBehaviour {
         return (float)((angle * 180)/System.Math.PI);
     }
 
+    public void newScale(GameObject theGameObject, float newSize, char axis) {
+        float size = 0;
+        switch (axis) {
+            case 'x':
+                size = theGameObject.GetComponent<Renderer> ().bounds.size.x;
+                break;
+            case 'y':
+                size = theGameObject.GetComponent<Renderer> ().bounds.size.y;
+                break;
+            case 'z':
+                size = theGameObject.GetComponent<Renderer> ().bounds.size.z;
+                break;
+        }
+        Vector3 rescale = theGameObject.transform.localScale;
+        rescale = newSize * rescale / size;
+        theGameObject.transform.localScale = rescale;
+    }
+
     void spawnFloor() {
         GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
         floor.transform.localScale = new Vector3(100, 100, 100);
@@ -97,7 +116,7 @@ public class ImportFurnitures : MonoBehaviour {
         double angle =  System.Math.Atan2(B[1] - A[1],B[0] - A[0]);
         wall.transform.localScale = new Vector3((float)length, (float)height, 0.01F);
         wall.transform.Rotate(0,ConvertToDegrees(angle),0);
-        wall.transform.position = new Vector3((float)A.x,0,(float)A.y);
+        wall.transform.position = new Vector3((A.x + B.x)/2,0,(A.y + B.y)/2);
     }
 
     void Room(Vector3 centre, Vector3 dimensions) {
@@ -136,10 +155,8 @@ public class ImportFurnitures : MonoBehaviour {
         //string raw = data.text;
         spawnFloor();
         string json = File.ReadAllText("object_data.txt");
-        json = "{\"Items\":" + json + "}";
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
         json = File.ReadAllText("wall_data.txt");
-        json = "{\"Items\":" + json + "}";
         Wall[] wallList = JsonHelper.FromJson<Wall>(json);
 
         Debug.Log(assetList.Length);
@@ -151,17 +168,105 @@ public class ImportFurnitures : MonoBehaviour {
         for (int i = 0; i < assetList.Length; i++) {
             GameObject obj;// = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             switch (assetList[i].id) {
+                //door
+                case 2:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("DoorPrefab"));
+                    newScale(obj, assetList[i].size, 'z');
+                    break;
+                //bottle
+                case 44:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Bottle"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //mug
+                case 47:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("mug"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //fork
+                case 48:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Fork"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //knife
+                case 49:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Knife"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //spoon
+                case 50:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Spoon"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //bowl
+                case 51:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("bowl"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //banana
+                case 52:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Banana"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //apple
+                case 53:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Apple"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //sandwich
+                case 54:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Sandwich"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //orange
+                case 55:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Orange"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
                 //chair
-                case 0:
+                case 62:
                     obj = GameObject.Instantiate((GameObject)Resources.Load("Chair_1"));
+                    newScale(obj, assetList[i].size, 'x');
                     break;
                 //table
-                case 1:
+                case 67:
                     obj = GameObject.Instantiate((GameObject)Resources.Load("CoffeTable_1"));
+                    newScale(obj, assetList[i].size, 'x');
                     break;
+                //tv
+                case 72:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("FlatScreenTV"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //laptop
+                case 73:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("laptop"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //phone
+                case 77:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("smartphone"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //toaster
+                case 80:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("toaster"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //book
+                case 84:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Books"));
+                    newScale(obj, assetList[i].size, 'x');
+                    break;
+                //scissors
+                case 87:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Scissors_blue"));
+                    newScale(obj, assetList[i].size, 'y');
+                    break;
+                //error
                 default:
                     obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    Debug.Log("object not found");
+                    Debug.Log("object " + assetList[i].id + " not found");
                     break;
             }
             obj.transform.position = listToVec3(assetList[i].position);
