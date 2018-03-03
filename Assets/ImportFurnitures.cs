@@ -20,17 +20,17 @@ public class ImportFurnitures : MonoBehaviour {
 
     [System.Serializable]
     public class WorldObject {
-        public List<int> position { get; set; }
-        public int @class { get; set; }
-        public List<double> orientation { get; set; }
-        public int size { get; set; }
+        public List<int> position;
+        public int id;
+        public List<double> orientation;
+        public int size;
     }
 
     [System.Serializable]
     public class Wall {
-        public List<int> position1 { get; set; }
-        public List<int> position2 { get; set; }
-        public int height { get; set; }
+        public List<int> position1;
+        public List<int> position2;
+        public int height;
     }
 
     public static class JsonHelper {
@@ -66,18 +66,34 @@ public class ImportFurnitures : MonoBehaviour {
         return pos;
     }
 
-    public double ConvertToRadians(double angle)
-    {
-        return (Math.PI / 180) * angle;
+    Vector2 listToVec2(List<int> rawVec) {
+        Vector2 pos = new Vector2((float)rawVec[0],(float)rawVec[1]);
+        return pos;
     }
 
-    void spawnWall(Vector2 A, Vector2 B) {
+    Vector3 listToVec3(List<int> rawVec) {
+        Vector3 pos = new Vector3((float)rawVec[0],(float)rawVec[1],(float)rawVec[2]);
+        return pos;
+    }
+
+    public double ConvertToRadians(double angle) {
+        return (System.Math.PI / 180) * angle;
+    }
+
+    void spawnFloor() {
+        GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        floor.transform.localScale = new Vector3(100, 100, 100);
+        floor.transform.position = new Vector3(0,0,0);
+    }
+
+    void spawnWall(Vector2 A, Vector2 B, int height) {
         //Generate an infinitely tall wall from point A to point B
         GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
         double length = Vector2.Distance(A,B);
-        double angle =  Math.Atan2(B[1] - A[1],B[0] - A[0]);
-        wall.transform.localScale = new Vector3(length, 10, 0.01F);
-        wall.transform.Rotate(ConvertToRadians(angle));
+        double angle =  System.Math.Atan2(B[1] - A[1],B[0] - A[0]);
+        wall.transform.localScale = new Vector3((float)length, (float)height, 0.01F);
+        wall.transform.Rotate(0,(float)ConvertToRadians(angle),0);
+        wall.transform.position = new Vector3((float)A.x,0,(float)A.y);
     }
 
     void Room(Vector3 centre, Vector3 dimensions) {
@@ -114,12 +130,45 @@ public class ImportFurnitures : MonoBehaviour {
 
         //loading data
         //string raw = data.text;
-        string json = File.ReadAllText("data.txt");
+        spawnFloor();
+        string json = File.ReadAllText("object_data.txt");
         json = "{\"Items\":" + json + "}";
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
-        //for (int i = 0; i < assetList.Length; i++) {
-            //Debug.Log(assetList[0]);
+        json = File.ReadAllText("wall_data.txt");
+        json = "{\"Items\":" + json + "}";
+        Wall[] wallList = JsonHelper.FromJson<Wall>(json);
+
         Debug.Log(assetList.Length);
+
+        for (int i = 0; i < assetList.Length; i++) {
+            Debug.Log(assetList[i].position[0] + assetList[i].position[1] + assetList[i].position[2]);
+            Debug.Log(assetList[i].id);
+        }
+
+        for (int i = 0; i < assetList.Length; i++) {
+            GameObject obj;
+            switch (assetList[i].id) {
+                //chair
+                case 0:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("Chair_1"));
+                    obj.transform.position = listToVec3(assetList[i].position);
+                    obj.transform.Rotate(0,(float)assetList[i].orientation[0],0);
+                    break;
+                //table
+                case 1:
+                    obj = GameObject.Instantiate((GameObject)Resources.Load("CoffeTable_1"));
+                    obj.transform.position = listToVec3(assetList[i].position);
+                    obj.transform.Rotate(0,(float)assetList[i].orientation[0],0);
+                    break;
+                default:
+                    Debug.Log("object not found");
+                    break;
+            }
+        }
+
+        for (int i = 0; i < wallList.Length; i++) {
+            spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
+        }
         //}
         /*//
         string[] lines = Regex.Split(raw, "\r\n|\n|\r");
