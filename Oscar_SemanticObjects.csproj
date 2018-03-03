@@ -259,9 +259,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="SyntaxTree.Mono.Cecil">
-      <HintPath>Assets/UnityVS/Editor/SyntaxTree.Mono.Cecil.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/Users/1004w/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
@@ -293,6 +290,7 @@
     <Compile Include="Assets\Furnitures\Ameye\Alex&apos;s Door System Lite\Scripts\RotationTools.cs" />
     <Compile Include="Assets\ImportFurnitures.cs" />
     <Compile Include="Assets\Invisible.cs" />
+    <Compile Include="Assets\LaptopMove.cs" />
     <Compile Include="Assets\motion\Huge Mocap Library\demo\scripts\demo.cs" />
     <Compile Include="Assets\motion\Huge Mocap Library\demo\scripts\smoothFollow.cs" />
     <Compile Include="Assets\PickUp.cs" />

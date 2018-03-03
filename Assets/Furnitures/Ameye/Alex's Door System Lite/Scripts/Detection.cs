@@ -60,6 +60,7 @@ public class Detection : MonoBehaviour
         // Cast ray from center of the screen towards where the player is looking
         if (Physics.Raycast(ray, out hit, Reach))
         {
+            Debug.Log(hit.collider.tag);
             if (hit.collider.tag == "Door")
             {
                 InReach = true;
@@ -84,6 +85,34 @@ public class Detection : MonoBehaviour
                     if (dooropening.RotationPending == false) StartCoroutine(hit.collider.GetComponent<Door>().Move());
                 }
             }
+
+            else if(hit.collider.tag == "Laptop")
+            {
+                InReach = true;
+                Debug.Log("laptop detected");
+
+                // Display the UI element when the player is in reach of the laptop
+                if (TextActive == false && TextPrefab != null)
+                {
+                    TextPrefabInstance = Instantiate(TextPrefab);
+                    TextActive = true;
+                    TextPrefabInstance.transform.SetParent(transform, true); // Make the player the parent object of the text element
+                }
+
+                // Give the object that was hit the name 'Laptop'
+                GameObject Laptop = hit.transform.gameObject;
+
+                // Get access to the 'Door' script attached to the object that was hit
+                LaptopMove laptopOpen = Laptop.GetComponent<LaptopMove>();
+
+                if (Input.GetKey(Character))
+                {
+                    // Open/close the door by running the 'Open' function found in the 'Door' script
+                    laptopOpen.Move();
+                }
+            }
+
+
 
             else
             {
