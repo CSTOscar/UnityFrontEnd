@@ -1,15 +1,83 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Web;
+using System.IO;
 using UnityEngine;
 
 public class ImportFurnitures : MonoBehaviour {
 
     public TextAsset data;
 
+    /*[System.Serializable]
+    public class WorldObject {
+        public List<double> position { get; set; }
+        public List<List<double>> precision { get; set; }
+        public int @class { get; set; }
+        public List<double> direction { get; set; }
+        public double size { get; set; }
+    }*/
+
+    [System.Serializable]
+    public class WorldObject {
+        public List<int> position { get; set; }
+        public int @class { get; set; }
+        public List<double> orientation { get; set; }
+        public int size { get; set; }
+    }
+
+    [System.Serializable]
+    public class Wall {
+        public List<int> position1 { get; set; }
+        public List<int> position2 { get; set; }
+        public int height { get; set; }
+    }
+
+    public static class JsonHelper {
+        public static T[] FromJson<T>(string json)
+        {
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+            return wrapper.Items;
+        }
+
+        public static string ToJson<T>(T[] array)
+        {
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper);
+        }
+
+        public static string ToJson<T>(T[] array, bool prettyPrint)
+        {
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper, prettyPrint);
+        }
+
+        [System.Serializable]
+        private class Wrapper<T>
+        {
+            public T[] Items;
+        }
+    }
+
     Vector3 rawToVec3(string[] rawVec) {
         Vector3 pos = new Vector3(float.Parse(rawVec[0]), float.Parse(rawVec[1]), float.Parse(rawVec[2]));
         return pos;
+    }
+
+    public double ConvertToRadians(double angle)
+    {
+        return (Math.PI / 180) * angle;
+    }
+
+    void spawnWall(Vector2 A, Vector2 B) {
+        //Generate an infinitely tall wall from point A to point B
+        GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        double length = Vector2.Distance(A,B);
+        double angle =  Math.Atan2(B[1] - A[1],B[0] - A[0]);
+        wall.transform.localScale = new Vector3(length, 10, 0.01F);
+        wall.transform.Rotate(ConvertToRadians(angle));
     }
 
     void Room(Vector3 centre, Vector3 dimensions) {
@@ -45,8 +113,15 @@ public class ImportFurnitures : MonoBehaviour {
     void Awake() {
 
         //loading data
-        string raw = data.text;
-        //
+        //string raw = data.text;
+        string json = File.ReadAllText("data.txt");
+        json = "{\"Items\":" + json + "}";
+        WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
+        //for (int i = 0; i < assetList.Length; i++) {
+            //Debug.Log(assetList[0]);
+        Debug.Log(assetList.Length);
+        //}
+        /*//
         string[] lines = Regex.Split(raw, "\r\n|\n|\r");
 
         string readState = "none";
@@ -63,7 +138,7 @@ public class ImportFurnitures : MonoBehaviour {
             }
             /* now having read the label from the odd line, the info about the furniture
              * is in these even lines and are handled depending on the label
-            */
+            *
             else
             {
                 //string[] features = line.Split('/');
@@ -135,7 +210,7 @@ public class ImportFurnitures : MonoBehaviour {
                 }
                 readState = "none"; //now set the state to read odd lines again
             }
-        }
+        }*/
     }
 
     // Use this for initialization
