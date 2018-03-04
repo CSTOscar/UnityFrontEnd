@@ -16,9 +16,9 @@ public class PickUp : MonoBehaviour {
 	void Update () {
 		if(mouse == true)
         {
-            Debug.Log("reachesthisbit");
             gameObject.GetComponent<Collider>().enabled = false;
             gameObject.GetComponent<Rigidbody>().useGravity = false;
+            gameObject.GetComponent<Rigidbody>().isKinematic = true;
             Transform cam = GameObject.Find("Camera").transform;
 
             gameObject.transform.position = onHand.position + cam.forward*1;
@@ -30,6 +30,7 @@ public class PickUp : MonoBehaviour {
             this.transform.parent = null;
             this.GetComponent<Collider>().enabled = true;
             this.GetComponent<Rigidbody>().useGravity = true;
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
         }
 	}
 

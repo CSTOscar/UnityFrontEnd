@@ -19,26 +19,26 @@ public class KnifePickUp : MonoBehaviour
     {
         if (mouse == true)
         {
-            Debug.Log("reachesthisbit");
             gameObject.GetComponent<Rigidbody>().useGravity = false;
+            gameObject.GetComponent<Rigidbody>().isKinematic = true;
             Transform cam = GameObject.Find("Camera").transform;
 
-            gameObject.transform.position = onHand.position + cam.forward * 1;
-            //this.transform.rotation = cam.rotation;
+            gameObject.transform.position = cam.position + cam.forward * 0.5f + new Vector3(0.3f, -0.3f, 0f);
+            gameObject.transform.rotation = cam.rotation * Quaternion.Euler(210, 70, 100);
+            
 
         }
         else
         {
             this.transform.parent = null;
             this.GetComponent<Rigidbody>().useGravity = true;
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
         }
     }
 
     private void OnMouseDown()
     {
         mouse = true;
-        Debug.Log(gameObject.name);
-
     }
 
     private void OnMouseUp()

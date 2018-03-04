@@ -156,8 +156,8 @@ public class ImportFurnitures : MonoBehaviour {
         spawnFloor();
         string json = File.ReadAllText("object_data.txt");
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
-        json = File.ReadAllText("wall_data.txt");
-        Wall[] wallList = JsonHelper.FromJson<Wall>(json);
+        //json = File.ReadAllText("wall_data.txt");
+        //Wall[] wallList = JsonHelper.FromJson<Wall>(json);
 
         Debug.Log(assetList.Length);
 
@@ -272,11 +272,11 @@ public class ImportFurnitures : MonoBehaviour {
             obj.transform.position = listToVec3(assetList[i].position);
             obj.transform.Rotate(0,0,ConvertToDegrees(assetList[i].orientation[0]));
         }
-        
+        /*
         for (int i = 0; i < wallList.Length; i++) {
             spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
         }
-        
+        */
 
         //}
         /*//

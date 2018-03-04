@@ -8,7 +8,7 @@ public class FruitCut : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        timeBananaPeeled = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -18,7 +18,7 @@ public class FruitCut : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "knife")
+        if(collision.collider.tag == "Knife")
         {
             if(gameObject.tag == "Apple")
             {
@@ -27,15 +27,15 @@ public class FruitCut : MonoBehaviour {
             }
             else if(gameObject.tag == "Banana")
             {
-                GameObject.Instantiate((GameObject)Resources.Load("BananaPeeled"), gameObject.transform.position, gameObject.transform.rotation);
+                GameObject.Instantiate((GameObject)Resources.Load("BananaOpen"), gameObject.transform.position, gameObject.transform.rotation);
                 Destroy(gameObject);
-                timeBananaPeeled = Time.time;
             }
-            else if(gameObject.tag == "BananaPeeled")
+            else if(gameObject.tag == "BananaOpen")
             {
+                Debug.Log(timeBananaPeeled + "  " + Time.time);
                 if(timeBananaPeeled + 1.0f < Time.time)
                 {
-                    GameObject.Instantiate((GameObject)Resources.Load("BananaOpen"), gameObject.transform.position, gameObject.transform.rotation);
+                    GameObject.Instantiate((GameObject)Resources.Load("BananaPeeled"), gameObject.transform.position, gameObject.transform.rotation);
                     Destroy(gameObject);
                 }
             }
