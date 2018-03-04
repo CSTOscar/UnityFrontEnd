@@ -75,17 +75,24 @@ public class ImportFurnitures : MonoBehaviour {
     }
 
     public void newScale(GameObject theGameObject, float newSize, char axis) {
-        float size = 0;
-        switch (axis) {
-            case 'x':
-                size = theGameObject.GetComponent<Renderer> ().bounds.size.x;
-                break;
-            case 'y':
-                size = theGameObject.GetComponent<Renderer> ().bounds.size.y;
-                break;
-            case 'z':
-                size = theGameObject.GetComponent<Renderer> ().bounds.size.z;
-                break;
+        float size = 1;
+        if (theGameObject.tag == "Laptop") {
+            size = 0.75F;
+        } else {
+            switch (axis) {
+                case 'x':
+                    size = (float)theGameObject.GetComponent<Renderer> ().bounds.size.x;
+                    break;
+                case 'y':
+                    size = (float)theGameObject.GetComponent<Renderer> ().bounds.size.y;
+                    break;
+                case 'z':
+                    size = (float)theGameObject.GetComponent<Renderer> ().bounds.size.z;
+                    break;
+    			default:
+    				size = (float)theGameObject.GetComponent<Renderer> ().bounds.size.x;
+    				break;
+            }
         }
         Vector3 rescale = theGameObject.transform.localScale;
         rescale = newSize * rescale / size;
@@ -122,10 +129,8 @@ public class ImportFurnitures : MonoBehaviour {
         //loading data
         spawnFloor();
 
-
         string json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/object_data.txt");
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
-
         json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/wall_data.txt");
         Wall[] wallList = JsonHelper.FromJson<Wall>(json);
 
@@ -241,6 +246,7 @@ public class ImportFurnitures : MonoBehaviour {
         for (int i = 0; i < wallList.Length; i++) {
             spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
         }
+
     }
 
     // Use this for initialization
@@ -253,4 +259,3 @@ public class ImportFurnitures : MonoBehaviour {
 
 	}
 }
-
