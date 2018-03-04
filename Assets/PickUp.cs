@@ -4,30 +4,31 @@ using UnityEngine;
 
 public class PickUp : MonoBehaviour {
 
-    public Transform onHand;
+    public Transform onHand; 
     private bool mouse;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+		onHand = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		if(mouse == true)
         {
-            this.GetComponent<BoxCollider>().enabled = false;
-            this.GetComponent<Rigidbody>().useGravity = false;
+            Debug.Log("reachesthisbit");
+            gameObject.GetComponent<Collider>().enabled = false;
+            gameObject.GetComponent<Rigidbody>().useGravity = false;
             Transform cam = GameObject.Find("Camera").transform;
 
-            this.transform.position = onHand.position + cam.forward*1;
+            gameObject.transform.position = onHand.position + cam.forward*1;
             //this.transform.rotation = cam.rotation;
 
         }
         else
         {
             this.transform.parent = null;
-            this.GetComponent<BoxCollider>().enabled = true;
+            this.GetComponent<Collider>().enabled = true;
             this.GetComponent<Rigidbody>().useGravity = true;
         }
 	}
@@ -35,6 +36,8 @@ public class PickUp : MonoBehaviour {
     private void OnMouseDown()
     {
         mouse = true;
+        Debug.Log(gameObject.name);
+
     }
 
     private void OnMouseUp()

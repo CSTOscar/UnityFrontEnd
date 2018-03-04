@@ -1,0 +1,1 @@
+[{"position": [0, 0, 0], "class": 1, "orientation": [0], "size": 2}, {"position": [2, 0, 2], "class": 0, "orientation": [1.57], "size": 1}, {"position": [-2, 0, -2], "class": 0, "orientation": [-1.57], "size": 1}]

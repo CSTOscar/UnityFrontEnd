@@ -79,7 +79,6 @@ public class LaptopMove : MonoBehaviour
 
     public void Move()
     {
-        Debug.Log("reaches move");
         rotationPending = true;
     }
 }

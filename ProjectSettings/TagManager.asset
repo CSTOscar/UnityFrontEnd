@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Door
   - Laptop
+  - Apple
+  - Banana
+  - BananaPeeled
+  - BananaOpen
+  - knife
   layers:
   - Default
   - TransparentFX

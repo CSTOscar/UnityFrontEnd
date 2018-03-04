@@ -60,7 +60,7 @@ public class Detection : MonoBehaviour
         // Cast ray from center of the screen towards where the player is looking
         if (Physics.Raycast(ray, out hit, Reach))
         {
-            Debug.Log(hit.collider.tag);
+            //Debug.Log(hit.collider.tag);
             if (hit.collider.tag == "Door")
             {
                 InReach = true;
@@ -89,7 +89,6 @@ public class Detection : MonoBehaviour
             else if(hit.collider.tag == "Laptop")
             {
                 InReach = true;
-                Debug.Log("laptop detected");
 
                 // Display the UI element when the player is in reach of the laptop
                 if (TextActive == false && TextPrefab != null)
