@@ -14,17 +14,17 @@ public class ImportFurnitures : MonoBehaviour {
 
     [System.Serializable]
     public class WorldObject {
-        public List<int> position;
+        public List<float> position;
         public int id;
-        public List<double> orientation;
+        public List<float> orientation;
         public float size;
     }
 
     [System.Serializable]
     public class Wall {
-        public List<int> position1;
-        public List<int> position2;
-        public int height;
+        public List<float> position1;
+        public List<float> position2;
+        public float height;
     }
 
     public static class JsonHelper {
@@ -56,18 +56,13 @@ public class ImportFurnitures : MonoBehaviour {
         }
     }
 
-    Vector3 rawToVec3(string[] rawVec) {
-        Vector3 pos = new Vector3(float.Parse(rawVec[0]), float.Parse(rawVec[1]), float.Parse(rawVec[2]));
+    Vector2 listToVec2(List<float> rawVec) {
+        Vector2 pos = new Vector2(rawVec[0],rawVec[1]);
         return pos;
     }
 
-    Vector2 listToVec2(List<int> rawVec) {
-        Vector2 pos = new Vector2((float)rawVec[0],(float)rawVec[1]);
-        return pos;
-    }
-
-    Vector3 listToVec3(List<int> rawVec) {
-        Vector3 pos = new Vector3((float)rawVec[0],(float)rawVec[1],(float)rawVec[2]);
+    Vector3 listToVec3(List<float> rawVec) {
+        Vector3 pos = new Vector3(rawVec[0],rawVec[1],rawVec[2]);
         return pos;
     }
 
@@ -80,7 +75,7 @@ public class ImportFurnitures : MonoBehaviour {
     }
 
     public void newScale(GameObject theGameObject, float newSize, char axis) {
-        float size = 1;
+        float size = 0;
         switch (axis) {
             case 'x':
                 size = theGameObject.GetComponent<Renderer> ().bounds.size.x;
@@ -103,11 +98,11 @@ public class ImportFurnitures : MonoBehaviour {
         floor.transform.position = new Vector3(0,0,0);
     }
 
-    void spawnWall(Vector2 A, Vector2 B, int height) {
+    void spawnWall(Vector2 A, Vector2 B, float height) {
         GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
         double length = Vector2.Distance(A,B);
         double angle =  System.Math.Atan2(B[1] - A[1],B[0] - A[0]);
-        wall.transform.localScale = new Vector3((float)length, (float)height, 0.01F);
+        wall.transform.localScale = new Vector3((float)length, height, 0.01F);
         wall.transform.Rotate(0,ConvertToDegrees(angle),0);
         wall.transform.position = new Vector3((A.x + B.x)/2,0,(A.y + B.y)/2);
     }
@@ -124,42 +119,11 @@ public class ImportFurnitures : MonoBehaviour {
 
     void Awake() {
 
-        try {
-            TcpClient tcpclnt = new TcpClient();
-            Console.WriteLine("Connecting.....");
-
-            tcpclnt.Connect("172.21.5.99",8001);
-            // use the ipaddress as in the server program
-
-            Console.WriteLine("Connected");
-            Console.Write("Enter the string to be transmitted : ");
-
-            Stream stm = tcpclnt.GetStream();
-
-            ASCIIEncoding asen= new ASCIIEncoding();
-            byte[] ba=asen.GetBytes(str);
-            Console.WriteLine("Transmitting.....");
-
-            stm.Write(ba,0,ba.Length);
-
-            byte[] bb=new byte[100];
-            int k=stm.Read(bb,0,100);
-
-            for (int i=0;i<k;i++)
-                Console.Write(Convert.ToChar(bb[i]));
-
-            tcpclnt.Close();
-        }
-
-        catch (Exception e) {
-            Console.WriteLine("Error..... " + e.StackTrace);
-        }
-
         //loading data
         spawnFloor();
 
-        Wall[] wallList = JsonHelper.FromJson<Wall>(json);
-        string json = File.ReadAllText("object_data.txt");
+
+        string json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/object_data.txt");
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
 
         json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/wall_data.txt");
@@ -289,3 +253,4 @@ public class ImportFurnitures : MonoBehaviour {
 
 	}
 }
+
