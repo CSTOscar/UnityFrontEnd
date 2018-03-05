@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Detection : MonoBehaviour
 {
+    //for makign sure we hold one object at once
+    private bool holding = false;
+
     // GENERAL SETTINGS
     [Header("General Settings")]
     [Tooltip("How close the player has to be in order to be able to open/close the door.")]
@@ -31,6 +34,16 @@ public class Detection : MonoBehaviour
     [Tooltip("The opacity of the debugray.")]
     [Range(0.0F, 1.0F)]
     public float Opacity = 1.0F;
+
+    public void setHolding(bool b)
+    {
+        holding = b;
+    }
+
+    public bool getHolding()
+    {
+        return holding;
+    }
 
     void Start()
     {
@@ -60,7 +73,14 @@ public class Detection : MonoBehaviour
         // Cast ray from center of the screen towards where the player is looking
         if (Physics.Raycast(ray, out hit, Reach))
         {
-            //Debug.Log(hit.collider.tag);
+            //Debug.Log(holding);
+            PickUp pick = hit.collider.GetComponent<PickUp>();
+
+            if(pick != null)
+            {
+                pick.setRayOn(true);
+            }
+
             if (hit.collider.tag == "Door")
             {
                 InReach = true;
@@ -110,8 +130,6 @@ public class Detection : MonoBehaviour
                     laptopOpen.Move();
                 }
             }
-
-
 
             else
             {

@@ -291,7 +291,6 @@
     <Compile Include="Assets\Furnitures\Ameye\Alex&apos;s Door System Lite\Scripts\RotationTools.cs" />
     <Compile Include="Assets\ImportFurnitures.cs" />
     <Compile Include="Assets\Invisible.cs" />
-    <Compile Include="Assets\KnifePickUp.cs" />
     <Compile Include="Assets\LaptopMove.cs" />
     <Compile Include="Assets\motion\Huge Mocap Library\demo\scripts\demo.cs" />
     <Compile Include="Assets\motion\Huge Mocap Library\demo\scripts\smoothFollow.cs" />

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class FruitCut : MonoBehaviour {
 
-    private float timeBananaPeeled;
+    private float timeTouched;
+    private bool secondTouch = false;
 
 	// Use this for initialization
 	void Start () {
-        timeBananaPeeled = Time.time;
+        timeTouched = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -22,19 +23,29 @@ public class FruitCut : MonoBehaviour {
         {
             if(gameObject.tag == "Apple")
             {
-                GameObject.Instantiate((GameObject)Resources.Load("AppleHalf"), gameObject.transform.position, gameObject.transform.rotation);
-                Destroy(gameObject);
+                if(secondTouch == false)
+                {
+                    secondTouch = true;
+                    GameObject.Instantiate((GameObject)Resources.Load("AppleHalf"), gameObject.transform.position, gameObject.transform.rotation);
+                    Destroy(gameObject);
+                }
+
             }
             else if(gameObject.tag == "Banana")
             {
-                GameObject.Instantiate((GameObject)Resources.Load("BananaOpen"), gameObject.transform.position, gameObject.transform.rotation);
-                Destroy(gameObject);
+                if(secondTouch == false)
+                {
+                    secondTouch = true;
+                    GameObject.Instantiate((GameObject)Resources.Load("BananaOpen"), gameObject.transform.position, gameObject.transform.rotation);
+                    Destroy(gameObject);
+                }
+
             }
             else if(gameObject.tag == "BananaOpen")
             {
-                Debug.Log(timeBananaPeeled + "  " + Time.time);
-                if(timeBananaPeeled + 1.0f < Time.time)
+                if (timeTouched + 1.0f < Time.time && secondTouch == false)
                 {
+                    secondTouch = true;
                     GameObject.Instantiate((GameObject)Resources.Load("BananaPeeled"), gameObject.transform.position, gameObject.transform.rotation);
                     Destroy(gameObject);
                 }
