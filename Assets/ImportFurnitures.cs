@@ -1,4 +1,6 @@
 using System.Collections;
+using Newtonsoft.Json.Linq;
+using Quobject.SocketIoClientDotNet.Client;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -7,10 +9,9 @@ using UnityEngine;
 
 public class ImportFurnitures : MonoBehaviour {
 
-    public class Constants {
-        public const string HOST = "192.x.x.x";
-        public const int PORT = 9999;
-    }
+    WorldObject[] assetList;
+    System.String json;
+    UnityEngine.Object[] instantiatedObjects;
 
     [System.Serializable]
     public class WorldObject {
@@ -124,16 +125,21 @@ public class ImportFurnitures : MonoBehaviour {
         return null;
     }
 
-    void Awake() {
+    int clearworld() {
+        if (assetList != null) {
+            for (int i = 0; i < assetList.Length; i++) {
+                Destroy(instantiatedObjects[i]);
+            }
+        }
+        return 0;
+    }
 
-        //loading data
-        spawnFloor();
-
-        string json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/object_data.txt");
-        WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
-        json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/wall_data.txt");
+    int generateWorld() {
+        //string json = File.ReadAllText(/*"../AbsoluteObject3DMap/data/temp_files/results/*/"object_data.txt");
+        assetList = JsonHelper.FromJson<WorldObject>(json);
+        json = File.ReadAllText(/*"../AbsoluteObject3DMap/data/temp_files/results/*/"wall_data.txt");
         Wall[] wallList = JsonHelper.FromJson<Wall>(json);
-
+        instantiatedObjects = new UnityEngine.Object[assetList.Length];
 
         for (int i = 0; i < assetList.Length; i++) {
             GameObject obj;
@@ -241,11 +247,44 @@ public class ImportFurnitures : MonoBehaviour {
             }
             obj.transform.position = listToVec3(assetList[i].position);
             obj.transform.Rotate(0,0,ConvertToDegrees(assetList[i].orientation[0]));
+            instantiatedObjects[i] = obj;
         }
 
         for (int i = 0; i < wallList.Length; i++) {
             spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
         }
+
+        return 0;
+    }
+
+    void Awake() {
+
+        //loading data
+        spawnFloor();
+
+        IO.Options opts = new IO.Options();
+
+        opts.Path = "/capture/socket.io";
+
+        var socket = IO.Socket("https://jyy24.kings.cam.ac.uk", opts);
+        socket.On(Socket.EVENT_CONNECT, () => {
+            Debug.Log("connected");
+            socket.Emit("recognitionRequest");
+            });
+        socket.On("recognised", (data) =>{
+            /*var jObject =  data as JToken;
+
+            json = jObject.ToString();*/
+            Debug.Log(data);
+            Debug.Log(data.GetType());
+            //json = (string) data;
+            clearWorld();
+            generateWorld();
+        });
+        socket.On("error", (data) =>{
+            Debug.Log(data);
+            Debug.Log(data.GetType());
+        });
 
     }
 
