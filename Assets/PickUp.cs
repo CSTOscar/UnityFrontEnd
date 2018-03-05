@@ -9,6 +9,8 @@ public class PickUp : MonoBehaviour {
     private bool mouse = false;
     private bool rayOn = false;
     private bool held = false;
+    //private Quaternion original_rotation;
+    //private Vector3 original_cam_rotation;
 
     public void setRayOn(bool b)
     {
@@ -37,6 +39,8 @@ public class PickUp : MonoBehaviour {
         {
             held = true;
             detect.setHolding(true); //lock
+            //original_rotation = gameObject.transform.rotation;
+            //original_cam_rotation = GameObject.Find("Camera").transform.forward;
         }
 
         if (mouse == true && held) {
@@ -48,6 +52,7 @@ public class PickUp : MonoBehaviour {
 
                 Transform cam = GameObject.Find("Camera").transform;
                 gameObject.transform.position = cam.transform.position + cam.forward * 1;
+                //gameObject.transform.rotation = original_rotation * Quaternion.FromToRotation(original_cam_rotation, new Vector3(cam.forward.x, cam.forward.y, original_cam_rotation.z));
             }
             else //if knife
             {
