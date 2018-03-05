@@ -10,7 +10,6 @@ using UnityEngine;
 public class ImportFurnitures : MonoBehaviour {
 
     WorldObject[] assetList;
-    System.String json;
     UnityEngine.Object[] instantiatedObjects;
 
     [System.Serializable]
@@ -63,7 +62,7 @@ public class ImportFurnitures : MonoBehaviour {
     }
 
     Vector3 listToVec3(List<float> rawVec) {
-        Vector3 pos = new Vector3(rawVec[0],rawVec[1],rawVec[2]);
+        Vector3 pos = new Vector3(rawVec[0],-rawVec[1],rawVec[2]);
         return pos;
     }
 
@@ -134,11 +133,11 @@ public class ImportFurnitures : MonoBehaviour {
         return 0;
     }
 
-    int generateWorld() {
-        //string json = File.ReadAllText(/*"../AbsoluteObject3DMap/data/temp_files/results/*/"object_data.txt");
+    int generateWorld(string objectjson) {
+
+        clearworld();
+
         assetList = JsonHelper.FromJson<WorldObject>(json);
-        json = File.ReadAllText(/*"../AbsoluteObject3DMap/data/temp_files/results/*/"wall_data.txt");
-        Wall[] wallList = JsonHelper.FromJson<Wall>(json);
         instantiatedObjects = new UnityEngine.Object[assetList.Length];
 
         for (int i = 0; i < assetList.Length; i++) {
@@ -250,9 +249,9 @@ public class ImportFurnitures : MonoBehaviour {
             instantiatedObjects[i] = obj;
         }
 
-        for (int i = 0; i < wallList.Length; i++) {
-            spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
-        }
+        //for (int i = 0; i < wallList.Length; i++) {
+        //    spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
+    //    }
 
         return 0;
     }
@@ -271,15 +270,20 @@ public class ImportFurnitures : MonoBehaviour {
             Debug.Log("connected");
             socket.Emit("recognitionRequest");
             });
-        socket.On("recognised", (data) =>{
-            /*var jObject =  data as JToken;
+/*        socket.On("recognised", (data) =>{
+            var jObject =  data as JToken;
 
-            json = jObject.ToString();*/
+            Debug.Log(jObject.Value<string>("id"));
+
             Debug.Log(data);
             Debug.Log(data.GetType());
-            //json = (string) data;
+            json = (string) data;
             clearWorld();
             generateWorld();
+        });*/
+        socket.On("recognised", (data)=>{
+            var dummyObj = data as JToken;
+            /*var dummy = */generateWorld(dummyObj.ToString());
         });
         socket.On("error", (data) =>{
             Debug.Log(data);
