@@ -102,7 +102,7 @@ public class ImportFurnitures : MonoBehaviour {
     void spawnFloor() {
         GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
         floor.transform.localScale = new Vector3(100, 100, 100);
-        floor.transform.position = new Vector3(0,0,0);
+        floor.transform.position = new Vector3(0,-1.3f,0);
     }
 
     void spawnWall(Vector2 A, Vector2 B, float height) {
@@ -127,7 +127,7 @@ public class ImportFurnitures : MonoBehaviour {
     void Awake() {
 
         //loading data
-        spawnFloor();
+        //spawnFloor();
 
         string json = File.ReadAllText("../AbsoluteObject3DMap/data/temp_files/results/object_data.txt");
         WorldObject[] assetList = JsonHelper.FromJson<WorldObject>(json);
@@ -243,9 +243,11 @@ public class ImportFurnitures : MonoBehaviour {
             obj.transform.Rotate(0,0,ConvertToDegrees(assetList[i].orientation[0]));
         }
 
+        
         for (int i = 0; i < wallList.Length; i++) {
             spawnWall(listToVec2(wallList[i].position1), listToVec2(wallList[i].position2), wallList[i].height);
         }
+        
 
     }
 
